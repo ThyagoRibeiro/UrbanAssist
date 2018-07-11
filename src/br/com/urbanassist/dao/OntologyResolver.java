@@ -1,7 +1,6 @@
 package br.com.urbanassist.dao;
 
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -12,30 +11,36 @@ import org.omwg.ontology.Ontology;
 import org.omwg.ontology.Variable;
 import org.wsml.reasoner.api.WSMLReasoner;
 import org.wsml.reasoner.api.WSMLReasonerFactory;
-import org.wsml.reasoner.api.inconsistency.InconsistencyException;
 import org.wsml.reasoner.impl.DefaultWSMLReasonerFactory;
 import org.wsml.reasoner.impl.WSMO4JManager;
 import org.wsmo.common.IRI;
 import org.wsmo.common.TopEntity;
-import org.wsmo.common.exception.InvalidModelException;
 import org.wsmo.factory.Factory;
 import org.wsmo.factory.LogicalExpressionFactory;
 import org.wsmo.wsml.Parser;
-import org.wsmo.wsml.ParserException;
 
-public class OntologyResolver {
+import br.com.urbanassist.util.Constants;
 
-	private static final OntologyResolver INSTANCE = new OntologyResolver();
+public final class OntologyResolver {
 
-	public static OntologyResolver getInstance() {
-		return INSTANCE;
+	private LogicalExpressionFactory leFactory;
+	private Parser wsmlparser;
+	private Ontology ontology;
+	private WSMO4JManager wsmoManager;
+	private WSMLReasoner reasoner;
+
+	public OntologyResolver() {
+
+		try {
+			setUpFactories();
+			ontology = parseAndLoadOntology(Constants.ONTOLOGY_FILE);
+			reasoner = getReasoner();
+			reasoner.registerOntology(ontology);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-	private LogicalExpressionFactory leFactory = null;
-	private Parser wsmlparser = null;
-
-	private WSMO4JManager wsmoManager = null;
-
+	
 	private WSMLReasoner getReasoner() {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(WSMLReasonerFactory.PARAM_BUILT_IN_REASONER, WSMLReasonerFactory.BuiltInReasoner.IRIS);
@@ -43,8 +48,7 @@ public class OntologyResolver {
 		return reasoner;
 	}
 
-	private Ontology parseAndLoadOntology(String ontologyFile)
-			throws IOException, ParserException, InvalidModelException {
+	private Ontology parseAndLoadOntology(String ontologyFile) {
 
 		try {
 			final TopEntity[] identifiable = wsmlparser.parse(new FileReader(ontologyFile));
@@ -52,7 +56,7 @@ public class OntologyResolver {
 			return (Ontology) identifiable[0];
 
 		} catch (Exception e) {
-			System.out.println("Unable to parse ontology: " + e.getMessage());
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -77,27 +81,7 @@ public class OntologyResolver {
 		return result;
 	}
 
-	public Set<Map<Variable, Term>> runProgram(String ontologyLocation, String query) {
-		setUpFactories();
-		
-		Ontology ontology = null;
-		try {
-			ontology = parseAndLoadOntology(ontologyLocation);
-		} catch (IOException e2) {
-			e2.printStackTrace();
-		} catch (ParserException e2) {
-			e2.printStackTrace();
-		} catch (InvalidModelException e2) {
-			e2.printStackTrace();
-		}
-
-		WSMLReasoner reasoner = getReasoner();
-
-		try {
-			reasoner.registerOntology(ontology);
-		} catch (InconsistencyException e1) {
-			e1.printStackTrace();
-		}
+	public Set<Map<Variable, Term>> runProgram(String query) {
 
 		Set<Map<Variable, Term>> result = null;
 		try {

@@ -76,7 +76,7 @@ public class Thing implements Serializable {
 		this.concept = concept;
 	}
 
-	public void setDescricao(Attribute descricao) {
+	public void setDescription(Attribute descricao) {
 		this.description = descricao;
 	}
 
@@ -107,5 +107,5 @@ public class Thing implements Serializable {
 	public void setSituation(Attribute situation) {
 		this.situation = situation;
 	}
-
+	
 }

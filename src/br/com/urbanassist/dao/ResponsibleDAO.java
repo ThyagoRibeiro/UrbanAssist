@@ -16,83 +16,68 @@ import br.com.urbanassist.model.Attribute;
 
 public class ResponsibleDAO {
 
-	private static String attrsQuery(String id) {
-
-		if (id == null)
-			id = "?ID";
-
-		StringBuilder allAttr = new StringBuilder();
-
-		// allAttr.append("?objeto[hasID hasValue ");
-		// allAttr.append(id);
-		// allAttr.append("] and ?objeto[hasNameText hasValue ?nameText]");
-		// allAttr.append(" and ?objeto[hasNameAudio hasValue ?nameAudio]");
-		// allAttr.append(" and ?objeto[hasNameVideo hasValue ?nameVideo]");
-		// allAttr.append(" and ?objeto[hasDescriptionText hasValue ?descriptionText]");
-		// allAttr.append(" and ?objeto[hasDescriptionAudio hasValue
-		// ?descriptionAudio]");
-		// allAttr.append(" and ?objeto[hasDescriptionVideo hasValue
-		// ?descriptionVideo]");
-		// allAttr.append(" and ?objeto[hasMessageText hasValue ?messageText]");
-		// allAttr.append(" and ?objeto[hasMessageAudio hasValue ?messageAudio]");
-		// allAttr.append(" and ?objeto[hasMessageVideo hasValue ?messageVideo]");
-		// allAttr.append(" and ?objeto[hasAlertText hasValue ?alertText]");
-		// allAttr.append(" and ?objeto[hasAlertAudio hasValue ?alertAudio]");
-		// allAttr.append(" and ?objeto[hasAlertVideo hasValue ?alertVideo]");
-		// allAttr.append(" and ?objeto[hasDisplayText hasValue ?displayText]");
-		// allAttr.append(" and ?objeto[hasDisplayAudio hasValue ?displayAudio]");
-		// allAttr.append(" and ?objeto[hasDisplayVideo hasValue ?displayVideo]");
-		// allAttr.append(" and ?objeto[isContainedIn hasValue ?locality]");
-		// allAttr.append(" and ?objeto[hasResponsible hasValue ?responsible]");
-		// allAttr.append(" and ?objeto[hasSituation hasValue ?situation]");
-		// allAttr.append(" and ?objeto[hasCoord hasValue ?coord]");
-
-		return allAttr.toString();
-	}
+	private static OntologyResolver ontologyResolver = new OntologyResolver();
 
 	private static ArrayList<Responsible> createResponsibleList(Set<Map<Variable, Term>> result) {
 
 		ArrayList<Responsible> rspList = new ArrayList<>();
-		HashMap<String, String> attrsMap = new HashMap<>();
+		HashMap<String, HashMap<String, String>> objMap = new HashMap<>();
 
-		Responsible responsibly = new Responsible();
 		for (Map<Variable, Term> map : result) {
 
-			for (Variable key : map.keySet()) {
-				attrsMap.put(key.toString(), map.get(key).toString());
+			String rspStr = null, attribute = null, value = null;
+
+			for (Variable variable : map.keySet()) {
+
+				if (variable.getName().equals("responsible"))
+					rspStr = map.get(variable).toString();
+
+				if (variable.getName().equals("attribute"))
+					attribute = map.get(variable).toString().replaceAll(".*#", "");
+
+				if (variable.getName().equals("value"))
+					value = map.get(variable).toString();
 			}
 
-			responsibly.setName(new Attribute(attrsMap.get("?nameText").toString(),
-					attrsMap.get("?nameAudio").toString(), attrsMap.get("?nameVideo").toString()));
-			responsibly.setEmail(new Attribute(attrsMap.get("?emailText").toString(),
-					attrsMap.get("?emailAudio").toString(), attrsMap.get("?emailVideo").toString()));
-			responsibly.setPhone(new Attribute(attrsMap.get("?phoneText").toString(),
-					attrsMap.get("?phoneAudio").toString(), attrsMap.get("?phoneVideo").toString()));
+			if (objMap.containsKey(rspStr)) {
+				objMap.get(rspStr).put(attribute, value);
+			} else {
+				HashMap<String, String> newAttrMap = new HashMap<>();
+				newAttrMap.put(attribute, value);
+				objMap.put(rspStr, newAttrMap);
+			}
+		}
 
-			rspList.add(responsibly);
+		for (java.util.Map.Entry<String, HashMap<String, String>> entry : objMap.entrySet()) {
+			HashMap<String, String> objAttr = entry.getValue();
+
+			Responsible newResponsible = new Responsible();
+
+			newResponsible.setName(new Attribute(objAttr.get("hasNameText"), objAttr.get("hasNameAudio"),
+					objAttr.get("hasNameVideo")));
+			newResponsible.setEmail(new Attribute(objAttr.get("hasEmailText"), objAttr.get("hasEmailAudio"),
+					objAttr.get("hasEmailVideo")));
+			newResponsible.setPhone(new Attribute(objAttr.get("hasPhoneText"), objAttr.get("hasPhoneAudio"),
+					objAttr.get("hasPhoneVideo")));
+
+			rspList.add(newResponsible);
 		}
 
 		return rspList;
 	}
-
-	public static void main(String[] args) {
-
-		Responsible responsible = new Responsible();
-		responsible.setName(new Attribute("Thyago", "", ""));
-		
-		insert(responsible);
-	}
-
+	
 	private static Set<Map<Variable, Term>> runQuery(String query) {
-		return OntologyResolver.getInstance().runProgram(Constants.ONTOLOGY_FILE, query);
+		return ontologyResolver.runProgram(query);
 	}
 
 	public static ArrayList<Responsible> select() {
-		return createResponsibleList(runQuery("?x memberOf Responsible"));
+		return createResponsibleList(runQuery("?responsible[?attribute hasValue ?value] memberOf Responsible"));
 	}
 
 	public static Responsible select(String id) {
-		return createResponsibleList(runQuery(attrsQuery(id))).get(0);
+		return createResponsibleList(
+				runQuery("?responsible[?attribute hasValue ?value] memberOf Responsible and ?responsible[hasID hasValue " + id + "]"))
+						.get(0);
 	}
 
 	public void delete() {
@@ -132,7 +117,7 @@ public class ResponsibleDAO {
 			stringBuilder.append(value);
 			stringBuilder.append("\"");
 		}
-		
+
 		if (!(value = responsible.getPhone().getAudio()).equals("")) {
 
 			stringBuilder.append("\r\nhasTelefoneAudio hasValue \"");
@@ -144,14 +129,14 @@ public class ResponsibleDAO {
 			stringBuilder.append("\r\nhasTelefoneVideo hasValue \"");
 			stringBuilder.append(value);
 		}
-		
+
 		if (!(value = responsible.getEmail().getText()).equals("")) {
 
 			stringBuilder.append("\r\nhasEmailText hasValue \"");
 			stringBuilder.append(value);
 			stringBuilder.append("\"");
 		}
-		
+
 		if (!(value = responsible.getEmail().getAudio()).equals("")) {
 
 			stringBuilder.append("\r\nhasEmailAudio hasValue \"");
@@ -175,6 +160,4 @@ public class ResponsibleDAO {
 		// TODO Auto-generated method stub
 	}
 	
-
-
 }

@@ -2,9 +2,6 @@ package br.com.urbanassist.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,13 +17,13 @@ import br.com.urbanassist.model.Edge;
 import br.com.urbanassist.model.Locality;
 import br.com.urbanassist.model.Path;
 import br.com.urbanassist.model.Thing;
-import br.com.urbanassist.model.WifiData;
-import br.com.urbanassist.util.ClassificationAlgorithm;
-import br.com.urbanassist.util.Classifiers;
+import br.com.urbanassist.model.User;
 import br.com.urbanassist.util.Constants;
 import br.com.urbanassist.util.FileManager;
 
 public class ThingDAO {
+
+	private static OntologyResolver ontologyResolver = new OntologyResolver();
 
 	private static ArrayList<Thing> createThingList(Set<Map<Variable, Term>> result) {
 
@@ -63,21 +60,17 @@ public class ThingDAO {
 
 			Thing newThing = new Thing();
 
-			newThing.setID(Integer.parseInt(objAttr.get("\r\nhasID")));
-			newThing.setName(new Attribute(objAttr.get("\r\nhasNameText"), objAttr.get("\r\nhasNameAudio"),
-					objAttr.get("\r\nhasNameVideo")));
-			newThing.setDescricao(new Attribute(objAttr.get("\r\nhasDescriptionText"),
-					objAttr.get("\r\nhasDescriptionAudio"), objAttr.get("\r\nhasDescriptionVideo")));
-			newThing.setMessage(new Attribute(objAttr.get("\r\nhasMessageText"), objAttr.get("\r\nhasMessageAudio"),
-					objAttr.get("\r\nhasMessageVideo")));
-			newThing.setAlert(new Attribute(objAttr.get("\r\nhasAlertText"), objAttr.get("\r\nhasAlertAudio"),
-					objAttr.get("\r\nhasAlertVideo")));
-			newThing.setDisplay(new Attribute(objAttr.get("\r\nhasDisplayText"), objAttr.get("\r\nhasDisplayAudio"),
-					objAttr.get("\r\nhasDisplayVideo")));
-
-			// thing.setLocalizacao(LocalityDAO.select(attrsMap.get("locality").toString()));
-			// thing.setResponsavel(ResponsibleDAO.select(attrsMap.get("responsible").toString()));
-			// thing.setSituacao(SituationDAO.select(attrsMap.get("situation").toString()));
+			newThing.setID(Integer.parseInt(objAttr.get("hasID")));
+			newThing.setName(new Attribute(objAttr.get("hasNameText"), objAttr.get("hasNameAudio"),
+					objAttr.get("hasNameVideo")));
+			newThing.setDescription(new Attribute(objAttr.get("hasDescriptionText"), objAttr.get("hasDescriptionAudio"),
+					objAttr.get("hasDescriptionVideo")));
+			newThing.setMessage(new Attribute(objAttr.get("hasMessageText"), objAttr.get("hasMessageAudio"),
+					objAttr.get("hasMessageVideo")));
+			newThing.setAlert(new Attribute(objAttr.get("hasAlertText"), objAttr.get("hasAlertAudio"),
+					objAttr.get("hasAlertVideo")));
+			newThing.setDisplay(new Attribute(objAttr.get("hasDisplayText"), objAttr.get("hasDisplayAudio"),
+					objAttr.get("hasDisplayVideo")));
 
 			objList.add(newThing);
 		}
@@ -104,7 +97,7 @@ public class ThingDAO {
 	}
 
 	private static Set<Map<Variable, Term>> runQuery(String query) {
-		return OntologyResolver.getInstance().runProgram(Constants.ONTOLOGY_FILE, query);
+		return ontologyResolver.runProgram(query);
 	}
 
 	public static ArrayList<Thing> select() {
@@ -253,21 +246,6 @@ public class ThingDAO {
 
 	}
 
-	public static Thing discoverThing(WifiData wifiData, ClassificationAlgorithm algorithm) {
-
-		HashMap<Integer, Double> probabilityMap = Classifiers.buildClassifier(wifiData, algorithm);
-
-		java.util.Map.Entry<Integer, Double> entry = Collections.min(probabilityMap.entrySet(),
-				new Comparator<java.util.Map.Entry<Integer, Double>>() {
-					public int compare(java.util.Map.Entry<Integer, Double> entry1,
-							java.util.Map.Entry<Integer, Double> entry2) {
-						return entry1.getValue().compareTo(entry2.getValue());
-					}
-				});
-
-		return ThingDAO.select(entry.getKey());
-	}
-
 	public static Edge getEdge(Thing origin, Thing destination) {
 
 		HashMap<String, String> attrsMap = new HashMap<>();
@@ -289,8 +267,6 @@ public class ThingDAO {
 	static PriorityQueue<Path> pQueue = new PriorityQueue<>();
 
 	public static LinkedList<Edge> traceRoute(Thing origin, Thing destination, HashMap<Integer, Integer> heuristicMap) {
-
-		// long start = System.currentTimeMillis();
 
 		Path path = null;
 		Thing current = null;
@@ -321,8 +297,6 @@ public class ThingDAO {
 				}
 		}
 
-		// System.out.println((System.currentTimeMillis() - start) / 1000);
-
 		LinkedList<Edge> edgeList = path.getPath();
 		edgeList.removeFirst();
 
@@ -339,10 +313,14 @@ public class ThingDAO {
 		return heuristic;
 	}
 
-	public static ArrayList<Thing> searchThings(String keyword) {
+	public static ArrayList<Thing> selectByKeyword(String keyword) {
+		ArrayList<Thing> thingList = new ArrayList<>();
 
-		ArrayList<Thing> thingList = new ArrayList<>();  
-		
+		for (Thing thing : select()) {
+			if (thing.getName().getText().contains(keyword) || thing.getDescription().getText().contains(keyword))
+				thingList.add(thing);
+		}
+
 		return thingList;
 	}
 

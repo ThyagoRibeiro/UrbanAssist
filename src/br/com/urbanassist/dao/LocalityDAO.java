@@ -10,13 +10,14 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
 import br.com.urbanassist.model.Attribute;
-import br.com.urbanassist.model.Locality;
-import br.com.urbanassist.model.LocalityEdge;
 import br.com.urbanassist.model.Edge;
+import br.com.urbanassist.model.Locality;
 import br.com.urbanassist.util.Constants;
 import br.com.urbanassist.util.FileManager;
 
 public class LocalityDAO {
+
+	private static OntologyResolver ontologyResolver = new OntologyResolver();
 
 	private static String attrsQuery(String id) {
 
@@ -39,17 +40,17 @@ public class LocalityDAO {
 		stringBuilder.append(" memberOf Locality");
 
 		stringBuilder.append("\r\nhasNameText hasValue \"");
-		stringBuilder.append(locality.getNome().getText());
+		stringBuilder.append(locality.getName().getText());
 		stringBuilder.append("\"");
 
-		if (!(value = locality.getNome().getAudio()).equals("")) {
+		if (!(value = locality.getName().getAudio()).equals("")) {
 
 			stringBuilder.append("\r\nhasNameAudio hasValue \"");
 			stringBuilder.append(value);
 			stringBuilder.append("\"");
 		}
 
-		if (!(value = locality.getNome().getVideo()).equals("")) {
+		if (!(value = locality.getName().getVideo()).equals("")) {
 
 			stringBuilder.append("\r\nhasNameVideo hasValue \"");
 			stringBuilder.append(value);
@@ -87,41 +88,56 @@ public class LocalityDAO {
 	private static ArrayList<Locality> createLocalityList(Set<Map<Variable, Term>> result) {
 
 		ArrayList<Locality> lclList = new ArrayList<>();
-		HashMap<String, String> attrsMap = new HashMap<>();
+		HashMap<String, HashMap<String, String>> objMap = new HashMap<>();
 
-		Locality locality = new Locality();
 		for (Map<Variable, Term> map : result) {
 
-			for (Variable key : map.keySet()) {
-				attrsMap.put(key.toString(), map.get(key).toString());
+			String localityStr = null, attribute = null, value = null;
+
+			for (Variable variable : map.keySet()) {
+
+				if (variable.getName().equals("locality"))
+					localityStr = map.get(variable).toString();
+
+				if (variable.getName().equals("attribute"))
+					attribute = map.get(variable).toString().replaceAll(".*#", "");
+
+				if (variable.getName().equals("value"))
+					value = map.get(variable).toString();
 			}
 
-			locality.setID(Integer.parseInt(attrsMap.get("?ID").toString()));
-			locality.setNome(new Attribute(attrsMap.get("?nameText").toString(), attrsMap.get("?nameAudio").toString(),
-					attrsMap.get("?nameVideo").toString()));
-			locality.setDescricao(new Attribute(attrsMap.get("?descriptionText").toString(),
-					attrsMap.get("?descriptionAudio").toString(), attrsMap.get("?descriptionVideo").toString()));
+			if (objMap.containsKey(localityStr)) {
+				objMap.get(localityStr).put(attribute, value);
+			} else {
+				HashMap<String, String> newAttrMap = new HashMap<>();
+				newAttrMap.put(attribute, value);
+				objMap.put(localityStr, newAttrMap);
+			}
+		}
 
-			lclList.add(locality);
+		for (java.util.Map.Entry<String, HashMap<String, String>> entry : objMap.entrySet()) {
+			HashMap<String, String> objAttr = entry.getValue();
+
+			Locality newLocality = new Locality();
+			
+			newLocality.setID(Integer.parseInt(objAttr.get("hasID")));
+			newLocality.setName(new Attribute(objAttr.get("hasNameText"), objAttr.get("hasNameAudio"),
+					objAttr.get("hasNameVideo")));
+			newLocality.setDescription(new Attribute(objAttr.get("hasDescriptionText"), objAttr.get("hasDescriptionAudio"),
+					objAttr.get("hasDescriptionVideo")));
+
+			lclList.add(newLocality);
 		}
 
 		return lclList;
 	}
 
-	public static void main(String[] args) {
-
-		Locality locality = new Locality();
-		locality.setNome(new Attribute("minha casa", "", ""));
-
-		insert(locality);
-	}
-
 	private static Set<Map<Variable, Term>> runQuery(String query) {
-		return OntologyResolver.getInstance().runProgram(Constants.ONTOLOGY_FILE, query);
+		return ontologyResolver.runProgram(query);
 	}
 
 	public static ArrayList<Locality> select() {
-		return createLocalityList(runQuery("?x memberOf Locality"));
+		return createLocalityList(runQuery("?locality[?attribute hasValue ?value] memberOf Locality"));
 	}
 
 	public static Locality select(String id) {
@@ -147,10 +163,15 @@ public class LocalityDAO {
 
 	}
 
-	public static ArrayList<Locality> searchLocality(String keyword) {
+	public static ArrayList<Locality> selectByKeyword(String keyword) {
 
 		ArrayList<Locality> localityList = new ArrayList<>();
-
+		
+		for (Locality locality : select()) {
+			if(locality.getName().getText().contains(keyword) || locality.getDescription().getText().contains(keyword))
+				localityList.add(locality);
+		}
+		
 		return localityList;
 	}
 

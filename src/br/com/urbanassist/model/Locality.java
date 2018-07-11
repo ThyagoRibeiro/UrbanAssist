@@ -27,15 +27,15 @@ public class Locality implements Serializable {
 		return idLocality;
 	}
 
-	public Attribute getNome() {
+	public Attribute getName() {
 		return name;
 	}
 
-	public Responsible getResponsavel() {
+	public Responsible getResponsible() {
 		return responsible;
 	}
 
-	public void setDescricao(Attribute descricao) {
+	public void setDescription(Attribute descricao) {
 		this.description = descricao;
 	}
 
@@ -43,12 +43,12 @@ public class Locality implements Serializable {
 		this.idLocality = id;
 	}
 
-	public void setNome(Attribute nome) {
-		this.name = nome;
+	public void setName(Attribute name) {
+		this.name = name;
 	}
 
-	public void setResponsavel(Responsible responsavel) {
-		this.responsible = responsavel;
+	public void setResponsible(Responsible responsible) {
+		this.responsible = responsible;
 	}
 
 }

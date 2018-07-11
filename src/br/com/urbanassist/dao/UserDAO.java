@@ -18,48 +18,65 @@ import br.com.urbanassist.util.FileManager;
 
 public class UserDAO {
 
-	private static String attrsQuery(String id) {
-
-		if (id == null)
-			id = "?ID";
-
-		StringBuilder allAttr = new StringBuilder();
-
-		return allAttr.toString();
-	}
+	private static OntologyResolver ontologyResolver = new OntologyResolver();
 
 	private static ArrayList<User> createUserList(Set<Map<Variable, Term>> result) {
 
 		ArrayList<User> usrList = new ArrayList<>();
-		HashMap<String, String> attrsMap = new HashMap<>();
+		HashMap<String, HashMap<String, String>> objMap = new HashMap<>();
 
-		User user = new User();
 		for (Map<Variable, Term> map : result) {
 
-			for (Variable key : map.keySet()) {
-				attrsMap.put(key.toString(), map.get(key).toString());
+			String userStr = null, attribute = null, value = null;
+
+			for (Variable variable : map.keySet()) {
+
+				if (variable.getName().equals("user"))
+					userStr = map.get(variable).toString();
+
+				if (variable.getName().equals("attribute"))
+					attribute = map.get(variable).toString().replaceAll(".*#", "");
+
+				if (variable.getName().equals("value"))
+					value = map.get(variable).toString();
 			}
 
-			user.setName(new Attribute(attrsMap.get("?nameText").toString(), attrsMap.get("?nameAudio").toString(),
-					attrsMap.get("?nameVideo").toString()));
-			user.setMidia(Integer.parseInt(attrsMap.get("?disability").toString()));
+			if (objMap.containsKey(userStr)) {
+				objMap.get(userStr).put(attribute, value);
+			} else {
+				HashMap<String, String> newAttrMap = new HashMap<>();
+				newAttrMap.put(attribute, value);
+				objMap.put(userStr, newAttrMap);
+			}
+		}
 
-			usrList.add(user);
+		for (java.util.Map.Entry<String, HashMap<String, String>> entry : objMap.entrySet()) {
+			HashMap<String, String> objAttr = entry.getValue();
+
+			User newUser = new User();
+
+			newUser.setName(new Attribute(objAttr.get("hasNameText"), objAttr.get("hasNameAudio"),
+					objAttr.get("hasNameVideo")));
+			newUser.setMidia(Integer.parseInt(objAttr.get("hasMidia")));
+
+			usrList.add(newUser);
 		}
 
 		return usrList;
 	}
 
 	private static Set<Map<Variable, Term>> runQuery(String query) {
-		return OntologyResolver.getInstance().runProgram(Constants.ONTOLOGY_FILE, query);
+		return ontologyResolver.runProgram(query);
 	}
 
 	public static ArrayList<User> select() {
-		return createUserList(runQuery("?x memberOf User"));
+		return createUserList(runQuery("?user[?attribute hasValue ?value] memberOf User"));
 	}
 
 	public static User select(String id) {
-		return createUserList(runQuery(attrsQuery(id))).get(0);
+		return createUserList(
+				runQuery("?user[?attribute hasValue ?value] memberOf User and ?user[hasID hasValue " + id + "]"))
+						.get(0);
 	}
 
 	public static void delete() {
@@ -117,13 +134,6 @@ public class UserDAO {
 		sb.append(")");
 
 		FileManager.writeString(Constants.ONTOLOGY_FILE, sb.toString(), true);
-	}
-
-	public static void main(String[] args) {
-		User user = new User();
-		user.setID(1);
-
-		getRatedLocalities(user);
 	}
 
 	public static HashMap<Integer, Integer> getRatedThings(User user) {

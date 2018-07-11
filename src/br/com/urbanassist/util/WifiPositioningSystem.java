@@ -10,23 +10,20 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import br.com.urbanassist.dao.ThingDAO;
+import br.com.urbanassist.model.Thing;
 import br.com.urbanassist.model.WifiData;
 import weka.classifiers.Classifier;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.functions.Logistic;
-import weka.classifiers.lazy.IBk;
 import weka.classifiers.trees.J48;
-import weka.classifiers.trees.RandomForest;
-import weka.classifiers.trees.RandomTree;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
-public class Classifiers {
+public class WifiPositioningSystem {
 
-	public static LinkedHashMap<Integer, Double> buildClassifier(WifiData wifiData, ClassificationAlgorithm option) {
+	public static Thing discoverThing(WifiData wifiData) {
 
 		TreeMap<Integer, Double> probabilityMap = new TreeMap<>();
 		try {
@@ -39,32 +36,7 @@ public class Classifiers {
 			double probability[] = null;
 			Classifier classifier = null;
 
-			switch (option) {
-
-			case NAIVE_BAYES:
-				classifier = new NaiveBayes();
-				break;
-
-			case KNN:
-				classifier = new IBk();
-				break;
-
-			case LOGISTIC_REGRESSION:
-				classifier = new Logistic();
-				break;
-
-			case RANDOM_TREE:
-				classifier = new RandomTree();
-				break;
-
-			case RANDOM_FOREST:
-				classifier = new RandomForest();
-				break;
-
-			case J48:
-				classifier = new J48();
-				break;
-			}
+			classifier = new J48();
 
 			classifier.buildClassifier(ins);
 			probability = classifier.distributionForInstance(newInstance);
@@ -80,7 +52,8 @@ public class Classifiers {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return (LinkedHashMap<Integer, Double>) sortByValue(probabilityMap);
+
+		return ThingDAO.select(sortByValue(probabilityMap).entrySet().iterator().next().getKey());
 
 	}
 
@@ -118,9 +91,9 @@ public class Classifiers {
 		stringBuilder.append("@relation wifiPOI\r\n\r\n");
 
 		for (String BSSID : bssidSet) {
-			stringBuilder.append("@attribute ");
+			stringBuilder.append("@attribute \"");
 			stringBuilder.append(BSSID);
-			stringBuilder.append(" numeric\r\n");
+			stringBuilder.append("\" numeric\r\n");
 		}
 
 		stringBuilder.append("@attribute poi {");
@@ -147,9 +120,6 @@ public class Classifiers {
 		FileManager.writeString(Constants.ARFF_FILE, arff, false);
 
 	}
-	
-	public static void main(String[] args) {
-	}
 
 	private static Instance newInstance(Instances ins, WifiData wifiData) {
 
@@ -166,7 +136,8 @@ public class Classifiers {
 		}
 
 		for (Entry<String, Integer> entry : wifiData.getWifiMap().entrySet()) {
-			newInstance.setValue(attrList.indexOf(entry.getKey()), entry.getValue());
+			if (attrList.contains(entry.getKey()))
+				newInstance.setValue(attrList.indexOf(entry.getKey()), entry.getValue());
 		}
 
 		return newInstance;

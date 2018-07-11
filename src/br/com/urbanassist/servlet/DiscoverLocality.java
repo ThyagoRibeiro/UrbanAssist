@@ -12,20 +12,17 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 
-import br.com.urbanassist.dao.DirectionDAO;
 import br.com.urbanassist.dao.ThingDAO;
-import br.com.urbanassist.model.Edge;
-import br.com.urbanassist.model.Thing;
-import br.com.urbanassist.model.User;
+import br.com.urbanassist.model.Locality;
 import br.com.urbanassist.model.WifiData;
 import br.com.urbanassist.util.ServletManager;
 import br.com.urbanassist.util.WifiPositioningSystem;
 
-@WebServlet("/showDirection")
-public class ShowDirection extends HttpServlet {
+@WebServlet("/DiscoverLocality")
+public class DiscoverLocality extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public ShowDirection() {
+	public DiscoverLocality() {
 		super();
 	}
 
@@ -33,27 +30,26 @@ public class ShowDirection extends HttpServlet {
 			throws ServletException, IOException {
 
 		JSONObject jsonObject = ServletManager.readJSON(request);
-		User user = new Gson().fromJson(jsonObject.get("user").toString(), User.class);
 		String method = jsonObject.getString("method");
 
-		Thing thingOrigin = null;
+		Locality locality = null;
 
 		switch (method) {
+
 		case "qrCode":
 
 			int id = jsonObject.getInt("data");
-			thingOrigin = ThingDAO.select(id);
+			locality = ThingDAO.select(id).getLocality();
 			break;
 
 		case "wifiData":
 
 			WifiData wifiData = new Gson().fromJson(jsonObject.get("data").toString(), WifiData.class);
-			thingOrigin = WifiPositioningSystem.discoverThing(wifiData);
+			locality = WifiPositioningSystem.discoverThing(wifiData).getLocality();
 			break;
 		}
 
-		Edge cEdge = DirectionDAO.removeEdge(user, thingOrigin);
-		ServletManager.writeObject(cEdge, response);
+		ServletManager.writeObject(locality, response);
 	}
 
 }

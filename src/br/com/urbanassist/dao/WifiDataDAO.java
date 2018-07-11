@@ -9,11 +9,13 @@ import org.omwg.logicalexpression.terms.Term;
 import org.omwg.ontology.Variable;
 
 import br.com.urbanassist.model.WifiData;
-import br.com.urbanassist.util.Classifiers;
 import br.com.urbanassist.util.Constants;
 import br.com.urbanassist.util.FileManager;
+import br.com.urbanassist.util.WifiPositioningSystem;
 
 public class WifiDataDAO {
+
+	private static OntologyResolver ontologyResolver = new OntologyResolver();
 
 	public static void insert(WifiData wifiData) {
 
@@ -27,8 +29,6 @@ public class WifiDataDAO {
 		stringBuilder.append(wifiData.getIDThing());
 		stringBuilder.append("\r\n");
 
-		stringBuilder.append("hasDate hasValue _dateTime(2017,4,20,19,00,00,-3,00)\r\n");
-
 		stringBuilder.append("hasMap hasValue {");
 
 		for (Map.Entry<String, Integer> wifiMap : wifiData.getWifiMap().entrySet()) {
@@ -40,7 +40,9 @@ public class WifiDataDAO {
 
 		FileManager.writeString(Constants.ONTOLOGY_FILE, stringBuilder.toString(), true);
 
-		Classifiers.wsml2arff(select());
+		WifiPositioningSystem.wsml2arff(select());
+		
+		ontologyResolver = new OntologyResolver();
 	}
 
 	private static ArrayList<WifiData> createWifiDataList(Set<Map<Variable, Term>> result) {
@@ -85,9 +87,10 @@ public class WifiDataDAO {
 
 		return new ArrayList<WifiData>(wifiDataMap.values());
 	}
-	
+
 	private static Set<Map<Variable, Term>> runQuery(String query) {
-		return OntologyResolver.getInstance().runProgram(Constants.ONTOLOGY_FILE, query);
+
+		return ontologyResolver.runProgram(query);
 	}
 
 	private static int getNumberResults() {
