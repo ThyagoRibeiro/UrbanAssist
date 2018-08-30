@@ -1,0 +1,142 @@
+<resources>
+    <string name="app_name">UrbanAssist</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="not_log_in">Não foi possível iniciar a sessão</string>
+    <string name="log_out">Log Out</string>
+    <string name="revoke">Revoke</string>
+    <string name="not_close_session">Não foi possível encerrar a sessão</string>
+    <string name="not_revoke">Não foi possível revogar o acesso</string>
+    <string name="thing_name">Nome do ponto</string>
+    <string name="locality_name">Nome da localização</string>
+    <string name="title_activity_user_info">UserInfo</string>
+    <string name="title_activity_search_thing">SearchThingActivity</string>
+    <string name="title_activity_search_locality">SearchLocalityActivity</string>
+    <string name="title_activity_discover_thing">DiscoverThingActivity</string>
+    <string name="title_activity_discover_locality">DiscoverLocalityActivity</string>
+    <string name="title_activity_guide_to_thing">GuideToThingActivity</string>
+    <string name="title_activity_guide_to_locality">GuideToLocalityActivity</string>
+    <string name="title_activity_rate_thing">RateThingActivity</string>
+    <string name="title_activity_rate_locality">RateLocalityActivity</string>
+    <string name="button_search">Buscar</string>
+    <string name="locality">Localidade</string>
+    <string name="local">Local</string>
+    <string name="title_activity_classify">ClassifyActivity</string>
+    <string name="title_activity_classify_new_locality">ClassifyNewLocalityActivity</string>
+    <string name="title_activity_classify_new_thing">ClassifyNewThingActivity</string>
+    <string name="title_activity_update_locality_classification">
+        UpdateLocalityClassificationActivity
+    </string>
+    <string name="title_activity_update_thing_classification">UpdateThingClassificationActivity
+    </string>
+    <string name="title_activity_show_thing_details">ShowThingDetailsActivity</string>
+    <string name="title_activity_show_locality_details">ShowLocalityDetailsActivity</string>
+    <string name="main_discover_thing_button">Descobrir ponto mais próximo</string>
+    <string name="main_discover_locality_button">Descobrir localização atual</string>
+    <string name="main_directions_thing_button">Mostrar direções até um ponto</string>
+    <string name="main_directions_locality_button">Mostrar direções até uma localização</string>
+    <string name="main_classify_thing_button">Classificar um ponto</string>
+    <string name="main_classify_location_button">Classificar uma localização</string>
+    <string name="main_search_thing_button">Procurar um ponto</string>
+    <string name="main_search_locality_button">Procurar uma localização</string>
+    <string name="title_activity_show_locality_direction">ShowLocalityDirectionActivity</string>
+    <string name="title_activity_show_thing_direction">ShowThingDirectionActivity</string>
+    <string name="action_settings">Preferências</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings2">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_settings">Preferências</string>
+    <string name="log_in">Login</string>
+    <string name="locality_origin_text">Localização origem</string>
+    <string name="locality_destination_text">Localização destino</string>
+    <string name="thing_origin_text">Ponto origem</string>
+    <string name="thing_destination_text">Ponto destino</string>
+    <string name="show_direction_button">Mostrar direções</string>
+    <string name="guide_to_locality">Mostrar direções</string>
+    <string name="submit_rate_button">Enviar classificação</string>
+    <string name="locality_thing">Localização do ponto</string>
+    <string name="guide_to_thing">Guiar até ponto</string>
+    <string name="call_responsible">Ligar para responsável</string>
+    <string name="title_activity_guide">GuideActivity</string>
+    <string name="read_qrcode_text">Ler QRCode</string>
+    <string name="origin">Origem</string>
+    <string name="destination">Destino</string>
+    <string name="meters">metros</string>
+    <string name="degree">graus</string>
+    <string name="title_activity_activate_voice_command">ActivateVoiceCommandActivity</string>
+    <string name="title_activity_activate_speech_info">ActivateSpeechInfoActivity</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="find_a_place">Encontre um lugar</string>
+</resources>
