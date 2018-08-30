@@ -1,0 +1,53 @@
+CONTACT US AT: HTTP://WWW.DUTCHVILLE.COM
+DEMO SITE:     http://www.dutchville.com/plaatjes
+
+BY USING THIS SCRIPT, YOU STATE THAT DUTCHVILLE.COM IS NOT RESPONSIBLE IN ANY WAY FOR ANY DAMAGE
+
+//ABOUT\\
+OpenDirectory is a free to use PHP-script enabling people to view your Open Directory!
+Version 1.0. has the following features:
+- Shows directory and subdirectory content 
+- You can sort files by name, type, size, file/directory
+- Upload files
+- Create directories
+- Remove files/directories
+- File operations protected by password
+- No MySQL database needed
+- Different Language support
+- Source files will no be shown in open directory
+- Only 6 files
+- Only 24 KB
+
+//HOW TO ADMIN\\
+At the bottom right corner there are three hyperlinks
+- The first hyperlink lets you upload files
+- The second hyperlink lets you delete files
+- The third hyperlink lets you create directories
+
+//INSTALL\\
+1. 
+Upload the files to the root of the directory you wish as OpenDir. 
+The index.php file should be in the root-directory. 
+The rest of the files should be in a directory called "workdir".
+
+2. 
+Edit the file workpad/config.php. 
+
+3.
+Change the variable "$rootdir" to your opendir to the rootdirectory. 
+For example: $rootdir = "http://www.mysite.com/myopendir";
+
+4. 
+Change the variable "$password" to your desired password. 
+We advise you to create a password longer than 8 characters for security reasons
+
+5.
+Change the variable "$language" to your desired language.
+Currently the language is set to english. Other possibility is dutch.
+
+6. 
+Remove this file!
+
+Your ready to use the script!
+Good Luck!
+

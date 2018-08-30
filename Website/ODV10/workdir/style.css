@@ -1,0 +1,34 @@
+body {margin: 0; background: #ffffff}
+p,td,li,pre {font: normal 10px verdana,arial,helvetica,sans-serif; color: #808080}
+ul {list-style: square}
+h1 {font: bold 17pt arial,helvetica,tahoma,sans-serif; color: steelblue}
+h2 {font: bold 13px verdana,arial,helvetica,sans-serif; color: steelblue}
+h3 {font: bold 12px verdana,arial,helvetica,sans-serif; color: #808080}
+a {color: steelblue}
+a:hover {color: #255B86}
+pre {margin-bottom: 0}
+.hrz_line {background: #a1a1a1}
+.hrz_line2 {background-image: url(images/hrz_line.gif); height: 1px}
+.maincontent {background: #Ffffff; padding: 2em}
+.colorbar {background: #76A8DB}
+.colorbar2 {background: #255B86}
+.foot {background: #F4F4F4; padding-right: 2em}
+.poptop, .popbot {background: #F4F4F4}
+.popbot {padding-top: 3px; padding-bottom: 3px; padding-left: 1em}
+.nav_special {color: #ADCEEF; margin-right: 2em}
+.nav_link {color: #ffffff; text-decoration: none}
+.category {font-size: 10pt; margin-bottom: 0.5em}
+dt {font: bold 10pt verdana,arial; padding-top: 1em}
+dd {font: normal 8pt verdana,arial; line-height: 18px}
+.QA {font: normal 18pt arial, helvetica,tahoma; color: #cccccc; width: 10px}
+.question {font-weight: bold; margin: 0; padding: 3px; font-size: 10pt}
+.answer {font-weight: normal; background: #EFEFEF;  margin: 0; padding: 3px; font-size: 10pt}
+.tablehead {background: #dddddd}
+.rowA {background: #EBECED}
+.rowB {background: #ffffff}
+.rowC {background: #E5E5E5}
+.textfield {font-family: verdana, sans-serif; font-size:11px; color:#666666; background:#ffffff; border-top:1px solid #bbbbbb; border-left:1px solid #bbbbbb; border-bottom:1px solid #dddddd; border-right:1px solid #dddddd;}
+.submit {font: normal 8pt "verdana","arial mt","arial narrow","arial"; background: #639BC5; color: #ffffff; border: #cccccc 1px outset}
+select {font: normal 7pt "verdana","arial mt","arial narrow","arial"; color: #616161;}
+select.nav_sel {font: normal 7pt "verdana","arial mt","arial narrow","arial"; color: #30678F; background: #ADCEEF}
+form {margin: 0}
