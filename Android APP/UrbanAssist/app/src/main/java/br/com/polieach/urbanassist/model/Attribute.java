@@ -4,55 +4,55 @@ import java.io.Serializable;
 
 public class Attribute implements Serializable {
 
-	String audio;
-	int id;
-	String text;
-	String video;
+    String audio;
+    int id;
+    String text;
+    String video;
 
-	public Attribute() {
-		
-		this.text = "";
-		this.audio = "";
-		this.video = "";
-	}
+    public Attribute() {
 
-	public Attribute(String text, String audio, String video) {
+        this.text = "";
+        this.audio = "";
+        this.video = "";
+    }
 
-		this.text = text;
-		this.audio = audio;
-		this.video = video;
-	}
+    public Attribute(String text, String audio, String video) {
 
-	public String getAudio() {
-		return audio;
-	}
+        this.text = text;
+        this.audio = audio;
+        this.video = video;
+    }
 
-	public int getID() {
-		return id;
-	}
+    public String getAudio() {
+        return audio;
+    }
 
-	public String getText() {
-		return text;
-	}
+    public void setAudio(String audio) {
+        this.audio = audio;
+    }
 
-	public String getVideo() {
-		return video;
-	}
+    public int getID() {
+        return id;
+    }
 
-	public void setAudio(String audio) {
-		this.audio = audio;
-	}
+    public void setID(int id) {
+        this.id = id;
+    }
 
-	public void setID(int id) {
-		this.id = id;
-	}
+    public String getText() {
+        return text;
+    }
 
-	public void setText(String texto) {
-		this.text = texto;
-	}
+    public void setText(String texto) {
+        this.text = texto;
+    }
 
-	public void setVideo(String video) {
-		this.video = video;
-	}
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
 
 }

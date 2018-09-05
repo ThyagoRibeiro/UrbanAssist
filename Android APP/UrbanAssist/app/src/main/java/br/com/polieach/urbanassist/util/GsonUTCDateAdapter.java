@@ -17,7 +17,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 // this class can't be static
-public class GsonUTCDateAdapter implements JsonSerializer<Date>,JsonDeserializer<Date> {
+public class GsonUTCDateAdapter implements JsonSerializer<Date>, JsonDeserializer<Date> {
 
     private final DateFormat dateFormat;
 

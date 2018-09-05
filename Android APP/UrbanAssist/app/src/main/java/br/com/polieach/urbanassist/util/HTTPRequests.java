@@ -17,11 +17,6 @@ import okhttp3.Response;
 
 public class HTTPRequests extends AsyncTask<String, Void, String> {
 
-    public interface OKHttpNetwork {
-        void onSuccess(String body);
-        void onFailure();
-    }
-
     public static void post(JSONObject object, String url, final OKHttpNetwork okHttpCallBack) {
 
         MediaType MEDIA_TYPE = MediaType.parse("application/json");
@@ -54,5 +49,11 @@ public class HTTPRequests extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... strings) {
         return null;
+    }
+
+    public interface OKHttpNetwork {
+        void onSuccess(String body);
+
+        void onFailure();
     }
 }

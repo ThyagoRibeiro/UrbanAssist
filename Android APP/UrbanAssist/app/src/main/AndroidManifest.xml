@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="br.com.polieach.urbanassist">
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -25,18 +24,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.ShowThingDetailsActivity"
-            android:label="@string/title_activity_show_thing_details"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.SearchActivity" />
+        <activity android:name=".view.POIDetailsActivity" />
+        <activity android:name=".view.LocalityDetailsActivity" />
+        <activity android:name=".view.DirectionsActivity" />
+        <activity android:name=".view.TraceRouteActivity" />
         <activity
             android:name=".view.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".view.MainActivity" />
-        <activity
-            android:name="com.journeyapps.barcodescanner.CaptureActivity"
-            android:screenOrientation="portrait"
-            tools:replace="screenOrientation" />
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>

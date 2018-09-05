@@ -1,50 +1,37 @@
 <resources>
     <string name="app_name">UrbanAssist</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="not_log_in">Não foi possível iniciar a sessão</string>
-    <string name="log_out">Log Out</string>
-    <string name="revoke">Revoke</string>
-    <string name="not_close_session">Não foi possível encerrar a sessão</string>
-    <string name="not_revoke">Não foi possível revogar o acesso</string>
-    <string name="thing_name">Nome do ponto</string>
-    <string name="locality_name">Nome da localização</string>
-    <string name="title_activity_user_info">UserInfo</string>
-    <string name="title_activity_search_thing">SearchThingActivity</string>
-    <string name="title_activity_search_locality">SearchLocalityActivity</string>
-    <string name="title_activity_discover_thing">DiscoverThingActivity</string>
-    <string name="title_activity_discover_locality">DiscoverLocalityActivity</string>
-    <string name="title_activity_guide_to_thing">GuideToThingActivity</string>
-    <string name="title_activity_guide_to_locality">GuideToLocalityActivity</string>
-    <string name="title_activity_rate_thing">RateThingActivity</string>
-    <string name="title_activity_rate_locality">RateLocalityActivity</string>
-    <string name="button_search">Buscar</string>
-    <string name="locality">Localidade</string>
-    <string name="local">Local</string>
-    <string name="title_activity_classify">ClassifyActivity</string>
-    <string name="title_activity_classify_new_locality">ClassifyNewLocalityActivity</string>
-    <string name="title_activity_classify_new_thing">ClassifyNewThingActivity</string>
-    <string name="title_activity_update_locality_classification">
-        UpdateLocalityClassificationActivity
-    </string>
-    <string name="title_activity_update_thing_classification">UpdateThingClassificationActivity
-    </string>
-    <string name="title_activity_show_thing_details">ShowThingDetailsActivity</string>
-    <string name="title_activity_show_locality_details">ShowLocalityDetailsActivity</string>
-    <string name="main_discover_thing_button">Descobrir ponto mais próximo</string>
-    <string name="main_discover_locality_button">Descobrir localização atual</string>
-    <string name="main_directions_thing_button">Mostrar direções até um ponto</string>
-    <string name="main_directions_locality_button">Mostrar direções até uma localização</string>
-    <string name="main_classify_thing_button">Classificar um ponto</string>
-    <string name="main_classify_location_button">Classificar uma localização</string>
-    <string name="main_search_thing_button">Procurar um ponto</string>
-    <string name="main_search_locality_button">Procurar uma localização</string>
-    <string name="title_activity_show_locality_direction">ShowLocalityDirectionActivity</string>
-    <string name="title_activity_show_thing_direction">ShowThingDirectionActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_poidetails">POIDetailsActivity</string>
+    <string name="title_activity_locality_details">LocalityDetailsActivity</string>
+    <string name="title_activity_directions">DirectionsActivity</string>
+    <string name="title_activity_trace_route">TraceRouteActivity</string>
+    <string name="mainActivity">Tela principal</string>
+    <string name="directionsActivity">Tela de direções</string>
+    <string name="localityDetailsActivity">Tela de detalhes de localidade</string>
+    <string name="poiDetailsActivity">Tela de detalhes de ponto de interesse</string>
+    <string name="searchActivity">Tela de busca</string>
+    <string name="traceRouteActivity">Tela de seleção de origem e destino</string>
+    <string name="preferencesActivity">Tela de preferências</string>
+    <string name="pointToQRCode">Aponte a câmera para o código</string>
     <string name="action_settings">Preferências</string>
+    <string name="title_activity_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_settings2">Settings</string>
+    <string name="afterSignalOptionsInformation">; Após o sinal, diga uma das seguintes opções </string>
+    <string name="afterSignalInformation">; Após o sinal, diga </string>
+
+    <string name="qrCodeCommand">; ler código</string>
+    <string name="discoverWithWiFiCommand">; descobrir ponto de interesse por Wi-Fi</string>
+    <string name="traceRouteCommand">; traçar rota</string>
+    <string name="selectPOICommand">; procurar ponto de interesse</string>
+    <string name="selectPOISymbolCommand">; procurar . de interesse</string>
+    <string name="selectOriginCommand">; procurar origem</string>
+    <string name="selectDestinationCommand">; procurar destino</string>
+    <string name="poiNameCommand">; o nome do ponto de origem</string>
+    <string name="originNameCommand">; o nome do ponto de origem</string>
+    <string name="destinationNameCommand">; o nome do ponto de destino</string>
+    <string name="preferencesCommand">; preferências</string>
+    <string name="returnCommand">; voltar</string>
+    <string name="cancelCommand">; cancelar</string>
 
     <!-- Strings related to Settings -->
 
@@ -117,26 +104,18 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_settings">Preferências</string>
-    <string name="log_in">Login</string>
-    <string name="locality_origin_text">Localização origem</string>
-    <string name="locality_destination_text">Localização destino</string>
-    <string name="thing_origin_text">Ponto origem</string>
-    <string name="thing_destination_text">Ponto destino</string>
-    <string name="show_direction_button">Mostrar direções</string>
-    <string name="guide_to_locality">Mostrar direções</string>
-    <string name="submit_rate_button">Enviar classificação</string>
-    <string name="locality_thing">Localização do ponto</string>
-    <string name="guide_to_thing">Guiar até ponto</string>
-    <string name="call_responsible">Ligar para responsável</string>
-    <string name="title_activity_guide">GuideActivity</string>
-    <string name="read_qrcode_text">Ler QRCode</string>
-    <string name="origin">Origem</string>
-    <string name="destination">Destino</string>
-    <string name="meters">metros</string>
-    <string name="degree">graus</string>
-    <string name="title_activity_activate_voice_command">ActivateVoiceCommandActivity</string>
-    <string name="title_activity_activate_speech_info">ActivateSpeechInfoActivity</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="find_a_place">Encontre um lugar</string>
+    <string name="do_login">Fazer Login</string>
+    <string name="do_logout">Fazer Logout</string>
+    <string name="connected">Conectado como</string>
+    <string name="alert">Alerta</string>
+    <string name="concept">Classe</string>
+    <string name="description">Descrição</string>
+    <string name="display">Display</string>
+    <string name="locality">Localidade</string>
+    <string name="message">Mensagem</string>
+    <string name="name">Nome</string>
+    <string name="situation">Situação</string>
+    <string name="responsiblePhone">Telefone do Responsável</string>
+    <string name="responsibleEmail">E-mail do Responsável</string>
+    <string name="responsibleName">Nome do Responsável</string>
 </resources>

@@ -25,8 +25,16 @@ public class Thing implements Serializable {
         return alert;
     }
 
+    public void setAlert(Attribute alert) {
+        this.alert = alert;
+    }
+
     public Attribute getConcept() {
         return concept;
+    }
+
+    public void setConcept(Attribute concept) {
+        this.concept = concept;
     }
 
     public ArrayList<Comment> getCommentList() {
@@ -37,24 +45,48 @@ public class Thing implements Serializable {
         return description;
     }
 
+    public void setDescription(Attribute descricao) {
+        this.description = descricao;
+    }
+
     public Attribute getDisplay() {
         return display;
+    }
+
+    public void setDisplay(Attribute display) {
+        this.display = display;
     }
 
     public int getID() {
         return idThing;
     }
 
+    public void setID(int idThing) {
+        this.idThing = idThing;
+    }
+
     public Locality getLocality() {
         return locality;
+    }
+
+    public void setLocality(Locality locality) {
+        this.locality = locality;
     }
 
     public Attribute getMessage() {
         return message;
     }
 
+    public void setMessage(Attribute message) {
+        this.message = message;
+    }
+
     public Attribute getName() {
         return name;
+    }
+
+    public void setName(Attribute name) {
+        this.name = name;
     }
 
     public Responsible getResponsible() {
@@ -65,44 +97,12 @@ public class Thing implements Serializable {
         return situation;
     }
 
-    public void setAlert(Attribute alert) {
-        this.alert = alert;
-    }
-
-    public void setConcept(Attribute concept) {
-        this.concept = concept;
-    }
-
-    public void setDescription(Attribute descricao) {
-        this.description = descricao;
-    }
-
-    public void setDisplay(Attribute display) {
-        this.display = display;
-    }
-
-    public void setID(int idThing) {
-        this.idThing = idThing;
-    }
-
-    public void setLocality(Locality locality) {
-        this.locality = locality;
-    }
-
-    public void setMessage(Attribute message) {
-        this.message = message;
-    }
-
-    public void setName(Attribute name) {
-        this.name = name;
+    public void setSituation(Attribute situation) {
+        this.situation = situation;
     }
 
     public void setResponsavel(Responsible responsavel) {
         this.responsible = responsavel;
-    }
-
-    public void setSituation(Attribute situation) {
-        this.situation = situation;
     }
 
 }

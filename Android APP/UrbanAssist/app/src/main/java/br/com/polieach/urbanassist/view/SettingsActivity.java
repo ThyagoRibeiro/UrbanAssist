@@ -1,45 +1,42 @@
 package br.com.polieach.urbanassist.view;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.util.ArrayList;
+
 import br.com.polieach.urbanassist.R;
-import br.com.polieach.urbanassist.controller.UserController;
 import br.com.polieach.urbanassist.model.Attribute;
 import br.com.polieach.urbanassist.model.User;
 
+//import br.com.polieach.urbanassist.controller.UserController;
+
 public class SettingsActivity extends AppCompatPreferenceActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private GoogleApiClient googleApiClient;
     public static final int SIGN_IN_CODE = 777;
     Preference logInPreference;
     User user;
-
-    public SettingsActivity() {
-    }
+    private GoogleApiClient googleApiClient;
+    private SpeechRecognizer mSpeechRecognizer;
+    private Intent mSpeechRecognizerIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +44,39 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Goo
         setupActionBar();
 
         addPreferencesFromResource(R.xml.preferences);
+
+        initializeGoogleSignIn();
+
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
+
+
+        SpeechRecognitionListener listener = new SpeechRecognitionListener();
+        mSpeechRecognizer.setRecognitionListener(listener);
+
+        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+    }
+
+    protected void recognizeVoiceCommand(ArrayList<String> matches) {
+
+        if (false) {
+
+
+            // voltar
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSpeechRecognizer.destroy();
+    }
+
+    private void initializeGoogleSignIn() {
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -63,11 +93,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Goo
         OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
 
         if (opr.isDone()) {
-            Log.d("msg", "tava logado");
             handleSignInResult(opr.get());
             logout();
         } else {
-            Log.d("msg", "não tava logado");
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
@@ -94,6 +122,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Goo
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
+
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
 
@@ -102,18 +131,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Goo
             user.setGoogleID(account.getId());
             user.setGoogleEmail(account.getEmail());
 
-            UserController.registerUser(user);
-
-            Log.d("msg", "logado: " + user.getName().getText());
-
+//            UserController.registerUser(user);
             logout();
-
-        } else {
-            Toast.makeText(this, R.string.not_log_in, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void setupActionBar() {
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Show the Up button in the action bar.
@@ -123,10 +147,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Goo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
+                finish();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -144,7 +168,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Goo
             }
         });
 
-        logInPreference.setTitle("Fazer Login");
+        logInPreference.setTitle(R.string.do_login);
         logInPreference.setSummary("");
         invalidateHeaders();
     }
@@ -165,10 +189,60 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Goo
             }
         });
 
-        logInPreference.setTitle("Fazer Logout");
-        logInPreference.setSummary("Conectado como " + user.getName().getText());
+        logInPreference.setTitle(R.string.do_logout);
+        logInPreference.setSummary(getString(R.string.connected) + user.getName().getText());
         invalidateHeaders();
 
+    }
+
+    protected class SpeechRecognitionListener implements RecognitionListener {
+
+        @Override
+        public void onBeginningOfSpeech() {
+            //Log.d(TAG, "onBeginingOfSpeech");
+        }
+
+        @Override
+        public void onBufferReceived(byte[] buffer) {
+
+        }
+
+        @Override
+        public void onEndOfSpeech() {
+            //Log.d(TAG, "onEndOfSpeech");
+        }
+
+        @Override
+        public void onError(int error) {
+            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+
+            //Log.d(TAG, "error = " + error);
+        }
+
+        @Override
+        public void onEvent(int eventType, Bundle params) {
+
+        }
+
+        @Override
+        public void onPartialResults(Bundle partialResults) {
+
+        }
+
+        @Override
+        public void onReadyForSpeech(Bundle params) {
+            Log.d("VoiceRecognition", "onReadyForSpeech"); //$NON-NLS-1$
+        }
+
+        @Override
+        public void onResults(Bundle results) {
+            ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            recognizeVoiceCommand(matches);
+        }
+
+        @Override
+        public void onRmsChanged(float rmsdB) {
+        }
     }
 }
 

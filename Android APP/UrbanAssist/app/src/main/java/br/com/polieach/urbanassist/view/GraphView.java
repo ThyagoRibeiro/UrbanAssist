@@ -1,6 +1,7 @@
 package br.com.polieach.urbanassist.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -22,7 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import br.com.polieach.urbanassist.controller.ThingController;
 import br.com.polieach.urbanassist.model.Edge;
 import br.com.polieach.urbanassist.model.Thing;
 
@@ -30,18 +30,14 @@ public class GraphView extends View {
 
     private static final int INVALID_POINTER_ID = -1;
     private static final float RADIUS = 15;
-
+    private static final int SCALE = 30;
     private Drawable mImage;
     private float mPosX, centralX, mPosY, centralY;
-
     private float mLastTouchX;
     private float mLastTouchY;
     private int mActivePointerId = INVALID_POINTER_ID;
-
     private ScaleGestureDetector mScaleDetector;
     private float mScaleFactor = 1.f;
-
-
     private Paint paint;
     private Path path;
     private Thing origin, destination, globalOrigin, globalDestination;
@@ -51,15 +47,11 @@ public class GraphView extends View {
     private Point originPoint;
     private Point destinationPoint;
     private boolean showDirection, initialized;
-
     private Edge edge;
-
-    private static final int SCALE = 30;
-
     private ArrayList<Edge> edgeList = new ArrayList<>(), edgeListCopy = new ArrayList<>();
     private Iterator<Edge> edgeIterator;
-    private HashMap<Integer, Point> pointMap;
-    private MainActivity mainActivity;
+    private HashMap<Thing, Point> pointMap;
+    private long lastTime;
 
     public GraphView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -97,10 +89,15 @@ public class GraphView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
 
-        for (Map.Entry<Integer, Point> entry : pointMap.entrySet()) {
-            if (Math.hypot(entry.getValue().x - ev.getX(), entry.getValue().y - ev.getY()) <= RADIUS * mScaleFactor) {
-                ThingController.discoverThingFromID(entry.getKey(), mainActivity);
-                return true;
+        if (System.currentTimeMillis() - lastTime > 2000) {
+            lastTime = System.currentTimeMillis();
+            for (Map.Entry<Thing, Point> entry : pointMap.entrySet()) {
+                if (Math.hypot(entry.getValue().x - ev.getX(), entry.getValue().y - ev.getY()) <= RADIUS * mScaleFactor) {
+                    Intent intent = new Intent(getContext(), POIDetailsActivity.class);
+                    intent.putExtra("pointOfInterest", entry.getKey());
+                    getContext().startActivity(intent);
+                    return true;
+                }
             }
         }
 
@@ -119,23 +116,27 @@ public class GraphView extends View {
             }
 
             case MotionEvent.ACTION_MOVE: {
-                final int pointerIndex = ev.findPointerIndex(mActivePointerId);
-                final float x = ev.getX(pointerIndex);
-                final float y = ev.getY(pointerIndex);
 
-                if (!mScaleDetector.isInProgress()) {
-                    final float dx = x - mLastTouchX;
-                    final float dy = y - mLastTouchY;
+                try {
 
-                    mPosX += dx;
-                    mPosY += dy;
+                    final int pointerIndex = ev.findPointerIndex(mActivePointerId);
+                    final float x = ev.getX(pointerIndex);
+                    final float y = ev.getY(pointerIndex);
 
-                    invalidate();
+                    if (!mScaleDetector.isInProgress()) {
+                        final float dx = x - mLastTouchX;
+                        final float dy = y - mLastTouchY;
+
+                        mPosX += dx;
+                        mPosY += dy;
+
+                        invalidate();
+                    }
+
+                    mLastTouchX = x;
+                    mLastTouchY = y;
+                } catch (Exception e) {
                 }
-
-                mLastTouchX = x;
-                mLastTouchY = y;
-
                 break;
             }
 
@@ -272,7 +273,7 @@ public class GraphView extends View {
         paint.setStyle(Paint.Style.FILL);
         canvas.drawCircle(point.x, point.y, RADIUS * mScaleFactor, paint);
 
-        pointMap.put(thing.getID(), point);
+        pointMap.put(thing, point);
     }
 
     private void drawEdge(Point originPoint, Point destinationPoint, boolean isNext, Canvas canvas) {
@@ -326,10 +327,6 @@ public class GraphView extends View {
         path.close();
 
         canvas.drawPath(path, paint);
-    }
-
-    public void setMainActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
     }
 
     public void centralize() {
