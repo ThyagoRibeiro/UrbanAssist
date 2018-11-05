@@ -60,7 +60,7 @@ public class EdgeDAO {
 			}
 		}
 
-		return new Edge(origin, destination, Integer.parseInt(attrsMap.get("?distance").toString()),
+		return new Edge(origin, destination, Double.parseDouble(attrsMap.get("?distance").toString()),
 				Integer.parseInt(attrsMap.get("?degree").toString()));
 
 	}
@@ -118,7 +118,7 @@ public class EdgeDAO {
 						LinkedList<Edge> newPath = (LinkedList<Edge>) path.getPath().clone();
 						newPath.add(new Edge(current, successor, newEdge.getDistance(), newEdge.getDegree()));
 
-						pQueue.add(new Path(path.getCost() + newEdge.getDistance(),
+						pQueue.add(new Path(path.getCost() + (int) newEdge.getDistance(),
 								getHeuristic(successor.getID(), heuristicMap), newPath));
 					}
 				}

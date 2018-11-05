@@ -48,9 +48,9 @@ public class ShowDirection extends HttpServlet {
 
 		case "wifiData":
 
-			WifiData wifiData = new Gson().fromJson(jsonObject.get("data").toString(), WifiData.class);
-			thingOrigin = WifiPositioningSystem.discoverThing(wifiData);
-			break;
+//			WifiData wifiData = new Gson().fromJson(jsonObject.get("data").toString(), WifiData.class);
+//			thingOrigin = WifiPositioningSystem.discoverThing(wifiData);
+//			break;
 		}
 
 		Edge cEdge = DirectionDAO.removeEdge(user, thingOrigin);

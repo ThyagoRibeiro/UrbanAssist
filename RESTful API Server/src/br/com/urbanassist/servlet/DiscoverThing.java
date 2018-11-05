@@ -45,12 +45,12 @@ public class DiscoverThing extends HttpServlet {
 			int id = jsonObject.getInt("data");
 			thing = ThingDAO.select(id);
 			break;
-
-		case "wifiData":
-
-			WifiData wifiData = new Gson().fromJson(jsonObject.get("data").toString(), WifiData.class);
-			thing = WifiPositioningSystem.discoverThing(wifiData);
-			break;
+//
+//		case "wifiData":
+//
+//			WifiData wifiData = new Gson().fromJson(jsonObject.get("data").toString(), WifiData.class);
+//			thing = WifiPositioningSystem.discoverThing(wifiData);
+//			break;
 		}
 
 		ServletManager.writeObject(thing, response);

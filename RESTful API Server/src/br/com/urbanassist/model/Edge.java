@@ -5,14 +5,15 @@ import br.com.urbanassist.model.Thing;
 public class Edge {
 
 	private Thing destination;
-	private int distance, degree;
+	private double distance;
+	private int degree;
 	private Thing origin;
 
 	public Edge() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Edge(Thing origin, Thing destination, int distance, int degree) {
+	public Edge(Thing origin, Thing destination, double distance, int degree) {
 		super();
 		this.origin = origin;
 		this.destination = destination;
@@ -28,7 +29,7 @@ public class Edge {
 		return destination;
 	}
 
-	public int getDistance() {
+	public double getDistance() {
 		return distance;
 	}
 

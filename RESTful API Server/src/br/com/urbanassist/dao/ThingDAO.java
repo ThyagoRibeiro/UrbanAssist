@@ -17,7 +17,7 @@ public class ThingDAO {
 
 	private static OntologyResolver ontologyResolver = new OntologyResolver();
 
-	public static void addNeighbour(int idOrigin, int idDestination, int distance, int degree) {
+	public static void addNeighbour(int idOrigin, int idDestination, double distance, int degree) {
 
 		FileManager.writeString(Constants.ONTOLOGY_FILE, "\r\nrelationInstance Successor(thing" + idOrigin + ", thing"
 				+ idDestination + ", " + distance + ", " + degree + ")", true);

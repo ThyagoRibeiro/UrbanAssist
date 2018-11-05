@@ -53,7 +53,7 @@ public class AddNeighbour extends HttpServlet {
 		
 		int idOrigin = jsonObject.getInt("idOrigin");
 		int idDestination = ThingDAO.selectByKeyword(jsonObject.getString("destination")).get(0).getID();
-		int distance = Integer.parseInt(jsonObject.getString("distance"));
+		double distance = Double.parseDouble(jsonObject.getString("distance"));
 		int degree = Integer.parseInt(jsonObject.getString("degree"));
 
 		ThingDAO.addNeighbour(idOrigin, idDestination, distance, degree);

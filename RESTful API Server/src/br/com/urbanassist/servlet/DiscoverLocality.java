@@ -43,11 +43,11 @@ public class DiscoverLocality extends HttpServlet {
 			locality = ThingDAO.select(id).getLocality();
 			break;
 
-		case "wifiData":
-
-			WifiData wifiData = new Gson().fromJson(jsonObject.get("data").toString(), WifiData.class);
-			locality = WifiPositioningSystem.discoverThing(wifiData).getLocality();
-			break;
+//		case "wifiData":
+//
+//			WifiData wifiData = new Gson().fromJson(jsonObject.get("data").toString(), WifiData.class);
+//			locality = WifiPositioningSystem.discoverThing(wifiData).getLocality();
+//			break;
 		}
 
 		ServletManager.writeObject(locality, response);

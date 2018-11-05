@@ -23,7 +23,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 
 public class WifiPositioningSystem {
 
-	public static Thing discoverThing(WifiData wifiData) {
+	public static LinkedHashMap<Integer, Double> buildClassifier(WifiData wifiData, ClassificationAlgorithm option) {
 
 		TreeMap<Integer, Double> probabilityMap = new TreeMap<>();
 		try {
@@ -35,7 +35,6 @@ public class WifiPositioningSystem {
 
 			double probability[] = null;
 			Classifier classifier = null;
-
 			classifier = new J48();
 
 			classifier.buildClassifier(ins);
@@ -52,8 +51,7 @@ public class WifiPositioningSystem {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return ThingDAO.select(sortByValue(probabilityMap).entrySet().iterator().next().getKey());
+		return (LinkedHashMap<Integer, Double>) sortByValue(probabilityMap);
 
 	}
 
