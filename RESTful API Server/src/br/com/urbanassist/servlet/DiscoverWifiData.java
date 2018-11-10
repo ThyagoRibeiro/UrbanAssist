@@ -57,10 +57,9 @@ public class DiscoverWifiData extends HttpServlet {
 
 		JSONObject jsonObject = ServletManager.readJSON(request);
 
-		ClassificationAlgorithm algorithm = ClassificationAlgorithm.valueOf(jsonObject.getString("algorithm"));
 		WifiData wifiData = new Gson().fromJson(jsonObject.get("wifiData").toString(), WifiData.class);
 
-		LinkedHashMap<Integer, Double> probabilityMap = WifiPositioningSystem.buildClassifier(wifiData, algorithm);
+		LinkedHashMap<Integer, Double> probabilityMap = WifiPositioningSystem.buildClassifier(wifiData);
 
 		if (probabilityMap.entrySet().size() != 0) {
 			JSONArray thingArray = new JSONArray();

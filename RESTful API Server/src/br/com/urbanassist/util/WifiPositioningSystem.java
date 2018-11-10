@@ -23,7 +23,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 
 public class WifiPositioningSystem {
 
-	public static LinkedHashMap<Integer, Double> buildClassifier(WifiData wifiData, ClassificationAlgorithm option) {
+	public static LinkedHashMap<Integer, Double> buildClassifier(WifiData wifiData) {
 
 		TreeMap<Integer, Double> probabilityMap = new TreeMap<>();
 		try {

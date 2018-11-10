@@ -85,11 +85,9 @@ public class WifiDataDAO {
 		stringBuilder.setLength(stringBuilder.length() - 2);
 		stringBuilder.append("}");
 
-		FileManager.writeString(Constants.ONTOLOGY_FILE, stringBuilder.toString(), true);
-
-		WifiPositioningSystem.wsml2arff(select());
-		
+		FileManager.writeString(Constants.ONTOLOGY_FILE, stringBuilder.toString(), true);		
 		ontologyResolver = new OntologyResolver();
+		WifiPositioningSystem.wsml2arff(select());
 	}
 
 	private static Set<Map<Variable, Term>> runQuery(String query) {
