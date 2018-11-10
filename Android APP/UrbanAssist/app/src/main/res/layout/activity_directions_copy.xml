@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    tools:context="br.com.polieach.urbanassist.view.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/origin_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_marginTop="10dip"
+            android:focusable="false"
+            android:padding="10dip" />
+
+        <EditText
+            android:id="@+id/destination_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:focusable="false"
+            android:padding="10dip" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/coordinates_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_weight="1"
+                android:padding="10dip"
+                android:textSize="20dp" />
+
+            <ImageView
+                android:id="@+id/pointer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dip"
+                android:layout_weight="6"
+                android:src="@drawable/pointer" />
+
+        </LinearLayout>
+
+        <br.com.polieach.urbanassist.view.GraphView
+            android:id="@+id/graphView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:background="@drawable/border" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_centralize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/fab_qrcode"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/fab_qrcode"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/centralize_icon"
+            app:backgroundTint="@color/cardview_dark_background"
+            app:elevation="0dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_qrcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/fab_centralize"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/qrcode_icon"
+            app:backgroundTint="@color/cardview_dark_background"
+            app:elevation="0dp" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

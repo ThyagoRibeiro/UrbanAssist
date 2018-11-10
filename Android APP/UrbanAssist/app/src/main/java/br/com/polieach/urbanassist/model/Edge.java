@@ -5,7 +5,8 @@ import java.io.Serializable;
 public class Edge implements Serializable {
 
     private Thing destination;
-    private int distance, degree;
+    private double distance;
+    private int degree;
     private Thing origin;
 
     public Edge(Thing origin, Thing destination, int distance, int degree) {
@@ -32,7 +33,7 @@ public class Edge implements Serializable {
         return destination;
     }
 
-    public int getDistance() {
+    public double getDistance() {
         return distance;
     }
 

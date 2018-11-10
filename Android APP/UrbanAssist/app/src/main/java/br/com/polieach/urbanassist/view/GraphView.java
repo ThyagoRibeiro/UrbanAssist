@@ -42,7 +42,7 @@ public class GraphView extends View {
     private Path path;
     private Thing origin, destination, globalOrigin, globalDestination;
     private Edge nextEdge;
-    private int distance;
+    private double distance;
     private int degree;
     private Point originPoint;
     private Point destinationPoint;
@@ -252,7 +252,7 @@ public class GraphView extends View {
         pointMap = new HashMap<>();
     }
 
-    private Point defineSecondPosition(Point firstPosition, int distance, int degree) {
+    private Point defineSecondPosition(Point firstPosition, double distance, int degree) {
 
         Point secondPosition = new Point((int) (firstPosition.x + (Math.cos(Math.toRadians(degree)) * distance * SCALE * mScaleFactor)), (int) (firstPosition.y + (Math.sin(Math.toRadians(degree)) * distance * SCALE * mScaleFactor)));
         return secondPosition;

@@ -12,30 +12,56 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/origin_editText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:hint="Origem"
-            android:padding="10dip" />
+            android:layout_marginTop="10dip"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/destination_editText"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:text="Origem:" />
+
+            <EditText
+                android:id="@+id/origin_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:padding="10dip" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="10dip"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:hint="Destino"
-            android:padding="10dip" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:text="Destino:" />
+
+            <EditText
+                android:id="@+id/destination_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:padding="10dip" />
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/results_listView"

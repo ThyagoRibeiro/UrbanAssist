@@ -118,4 +118,13 @@
     <string name="responsiblePhone">Telefone do Responsável</string>
     <string name="responsibleEmail">E-mail do Responsável</string>
     <string name="responsibleName">Nome do Responsável</string>
+    <string name="walk">Caminhe </string>
+    <string name="meters"> metros</string>
+    <string name="turnAround">Dê meia volta</string>
+    <string name="turnLeft">Gire para a esquerda</string>
+    <string name="turnRight">Gire para a direita</string>
+    <string name="turnSlightlyRight">Gire levemente para a direita</string>
+    <string name="turnSlightlyLeft">Gire levemente para a esquerda</string>
+    <string name="arrived">Você chegou ao seu destino!</string>
+    <string name="until"> até </string>
 </resources>

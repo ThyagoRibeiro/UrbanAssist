@@ -6,12 +6,19 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 
@@ -21,16 +28,18 @@ import br.com.polieach.urbanassist.model.Edge;
 import br.com.polieach.urbanassist.model.Thing;
 import br.com.polieach.urbanassist.model.User;
 
-public class DirectionsActivity extends SpeechActivity implements SensorEventListener {
+public class DirectionsActivityCopy extends SpeechActivity implements SensorEventListener {
 
+    private static GraphView graphView;
     private static float degreesToGo = 0.f, currentDegree = 0.0f;
     private static double metersToGo;
     private static String pointToGo;
     private static TextView coordinatesText;
+    FloatingActionButton qrcode_fab, centralize_fab;
     private EditText origin_editText, destination_editText;
     private Thing origin, destination;
     private User user;
-    private static ImageView mPointer;
+    private ImageView mPointer;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Sensor mMagnetometer;
@@ -41,26 +50,21 @@ public class DirectionsActivity extends SpeechActivity implements SensorEventLis
     private float[] mR = new float[9];
     private float[] mOrientation = new float[3];
     private String coordinates = "", newCoordinates;
-    public static ArrayList<Edge> edgeList;
 
-    public void updateDirections() {
+    public static void showDirections(final ArrayList<Edge> edgeList) {
 
-        if (edgeList.size() > 0) {
+        degreesToGo = edgeList.get(0).getDegree();
+        metersToGo = edgeList.get(0).getDistance();
+        pointToGo = edgeList.get(0).getDestination().getName().getText();
 
-            Edge edge = edgeList.remove(0);
-
-            degreesToGo = edge.getDegree();
-            metersToGo = edge.getDistance();
-            pointToGo = edge.getDestination().getName().getText();
-
-            coordinatesText.setVisibility(View.VISIBLE);
-            mPointer.setVisibility(View.VISIBLE);
-        } else {
-
-            coordinatesText.setText(getResources().getString(R.string.arrived));
-            speech(getResources().getString(R.string.arrived));
-            mPointer.setVisibility(View.INVISIBLE);
-        }
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                graphView.updateEdgeList(edgeList, edgeList.get(0).getOrigin(), edgeList.get(3), edgeList.get(edgeList.size() - 1).getDestination());
+                graphView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -76,9 +80,8 @@ public class DirectionsActivity extends SpeechActivity implements SensorEventLis
 
         initialSpeech = getResources().getString(R.string.directionsActivity);
         initialSpeech += getResources().getString(R.string.afterSignalOptionsInformation);
-        initialSpeech += getResources().getString(R.string.selectOriginCommand);
-        initialSpeech += getResources().getString(R.string.selectDestinationCommand);
         initialSpeech += getResources().getString(R.string.preferencesCommand);
+        initialSpeech += getResources().getString(R.string.returnCommand);
     }
 
     private void initializeCompassSensor() {
@@ -91,116 +94,93 @@ public class DirectionsActivity extends SpeechActivity implements SensorEventLis
     @Override
     protected void initializeComponents() {
 
-        super.initializeComponents();
         setContentView(R.layout.activity_directions);
 
         origin_editText = findViewById(R.id.origin_text);
-        origin_editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DirectionsActivity.this, TraceRouteActivity.class);
-                intent.putExtra("origin", origin_editText.getText().toString());
-                intent.putExtra("destination", destination_editText.getText().toString());
-                intent.putExtra("requestCode", 1);
-                startActivityForResult(intent, 1);
-                overridePendingTransition(0, 0);
-            }
-        });
+        origin = (Thing) getIntent().getExtras().getSerializable("origin");
+        origin_editText.setText(origin.getName().getText());
 
         destination_editText = findViewById(R.id.destination_text);
-        destination_editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DirectionsActivity.this, TraceRouteActivity.class);
-                intent.putExtra("origin", origin_editText.getText().toString());
-                intent.putExtra("destination", destination_editText.getText().toString());
-                intent.putExtra("requestCode", 2);
-                startActivityForResult(intent, 2);
-                overridePendingTransition(0, 0);
-            }
-        });
+        destination = (Thing) getIntent().getExtras().getSerializable("destination");
+        destination_editText.setText(destination.getName().getText());
 
         coordinatesText = findViewById(R.id.coordinates_text);
-        coordinatesText.setVisibility(View.INVISIBLE);
-
         mPointer = findViewById(R.id.pointer);
-        mPointer.setVisibility(View.INVISIBLE);
 
-        mPointer.setOnClickListener(new View.OnClickListener() {
+        graphView = findViewById(R.id.graphView);
+
+        centralize_fab = findViewById(R.id.fab_centralize);
+        centralize_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateDirections();
+                graphView.centralize();
             }
         });
 
-        startLookingForThingWifi();
+        qrcode_fab = findViewById(R.id.fab_qrcode);
+        qrcode_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IntentIntegrator integrator = new IntentIntegrator(DirectionsActivityCopy.this);
+                integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
+                integrator.setOrientationLocked(false);
+
+                String pointToQRCode = getResources().getString(R.string.pointToQRCode);
+                speech(pointToQRCode);
+                integrator.setCameraId(0);
+                integrator.initiateScan();
+            }
+        });
 
         user = new User();
         user.setIdUser(0);
-    }
-
-    private void startLookingForThingWifi() {
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        ThingController.getThingsProbability(wifiManager.getScanResults(), DirectionsActivity.this);
-                        Thread.sleep(5 * 1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        t.start();
+//        ThingController.guideToThing(origin, destination, user, this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) {
-                origin = (Thing) data.getExtras().getSerializable("choice");
-                origin_editText.setText(origin.getName().getText());
-            }
-        }
-
-        if (requestCode == 2) {
-            if (resultCode == RESULT_OK) {
-                destination = (Thing) data.getExtras().getSerializable("choice");
-                destination_editText.setText(destination.getName().getText());
-            }
-        }
-
-        if (origin != null && destination != null) {
-            ThingController.guideToThing(origin, destination, user, this);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            Log.d("qrCode", result.getContents());
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     protected void recognizeVoiceCommand(ArrayList<String> matches) {
         super.recognizeVoiceCommand(matches);
 
+        if (false) {
 
-        if (matches.contains(getResources().getString(R.string.selectOriginCommand).replace("; ", ""))) {
-            origin_editText.requestFocus();
-            speechAndWaitCommand("Diga o ponto de origem");
-        } else if (matches.contains(getResources().getString(R.string.selectDestinationCommand).replace("; ", ""))) {
-            destination_editText.requestFocus();
-            speechAndWaitCommand("Diga o ponto de destino");
+            // qrcode
+            if (false) {
+                qrcode_fab.performClick();
+            } else if (false) {
+                centralize_fab.performClick();
+            }
         }
+    }
 
+    private String discoverDirection(float degree) {
 
+        if (degree < 10 || degree > 350)
+            return getResources().getString(R.string.walk) + " " + metersToGo + " " + getResources().getString(R.string.meters) + " " + getResources().getString(R.string.until) + " " + pointToGo;
+        if (degree < 45)
+            return getResources().getString(R.string.turnSlightlyLeft);
+        if (degree < 135)
+            return getResources().getString(R.string.turnLeft);
+        if (degree < 225)
+            return getResources().getString(R.string.turnAround);
+        if (degree < 315)
+            return getResources().getString(R.string.turnRight);
+        return getResources().getString(R.string.turnSlightlyRight);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        if (mPointer != null && mPointer.getVisibility() != View.INVISIBLE) {
+        if (mPointer != null) {
             if (event.sensor == mAccelerometer) {
                 System.arraycopy(event.values, 0, mLastAccelerometer, 0, event.values.length);
                 mLastAccelerometerSet = true;
@@ -237,21 +217,6 @@ public class DirectionsActivity extends SpeechActivity implements SensorEventLis
                 currentDegree = -azimuthInDegress;
             }
         }
-    }
-
-    private String discoverDirection(float degree) {
-
-        if (degree < 10 || degree > 350)
-            return getResources().getString(R.string.walk) + " " + metersToGo + " " + getResources().getString(R.string.meters) + " " + getResources().getString(R.string.until) + " " + pointToGo;
-        if (degree < 45)
-            return getResources().getString(R.string.turnSlightlyLeft);
-        if (degree < 135)
-            return getResources().getString(R.string.turnLeft);
-        if (degree < 225)
-            return getResources().getString(R.string.turnAround);
-        if (degree < 315)
-            return getResources().getString(R.string.turnRight);
-        return getResources().getString(R.string.turnSlightlyRight);
     }
 
     @Override

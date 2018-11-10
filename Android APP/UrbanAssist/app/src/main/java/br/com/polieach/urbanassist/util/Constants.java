@@ -18,4 +18,5 @@ public class Constants {
     public static final String SELECT_RATED_LOCALITIES = SERVER_URL + "selectRatedLocalities";
     public static final String SELECT_RATED_THINGS = SERVER_URL + "selectRatedThings";
     public static final String DISCOVER_NEIGHBOURS = SERVER_URL + "discoverNeighbours";
+    public static final String DISCOVER_WIFI_DATA = SERVER_URL + "discoverWifiData";
 }

@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -22,8 +20,8 @@ public class TraceRouteActivity extends SpeechActivity {
     boolean fromOrigin = true;
     EditText origin_editText, destination_editText;
     ListView results_listView;
-    Thing origin, destination;
     ArrayList<Thing> thingList = new ArrayList<>();
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +46,16 @@ public class TraceRouteActivity extends SpeechActivity {
     @Override
     protected void initializeComponents() {
 
-        origin_editText = findViewById(R.id.origin_editText);
+        intent = getIntent();
 
-        String hasOrigin = getIntent().getExtras().getString("hasOrigin");
-        if (!hasOrigin.equals(""))
-            origin_editText.setText(hasOrigin);
-
+        origin_editText = findViewById(R.id.origin_text);
+        origin_editText.setText(intent.getStringExtra("origin"));
         origin_editText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
 
                 fromOrigin = true;
                 ThingController.searchThing(origin_editText.getText().toString(), results_listView, TraceRouteActivity.this, thingList);
-
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -70,7 +65,8 @@ public class TraceRouteActivity extends SpeechActivity {
             }
         });
 
-        destination_editText = findViewById(R.id.destination_editText);
+        destination_editText = findViewById(R.id.destination_text);
+        destination_editText.setText(intent.getStringExtra("destination"));
         destination_editText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -86,7 +82,6 @@ public class TraceRouteActivity extends SpeechActivity {
             }
         });
 
-
         results_listView = findViewById(R.id.results_listView);
         results_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -94,26 +89,19 @@ public class TraceRouteActivity extends SpeechActivity {
 
                 Thing selectedThing = thingList.get(i);
 
-                if (fromOrigin) {
-                    origin = selectedThing;
-                    origin_editText.setText(selectedThing.getName().getText());
-                } else {
-                    destination = selectedThing;
-                    destination_editText.setText(selectedThing.getName().getText());
-                }
-
-                if (origin != null && destination != null) {
-                    Intent intent = new Intent(TraceRouteActivity.this, DirectionsActivity.class);
-                    intent.putExtra("origin", origin);
-                    intent.putExtra("destination", destination);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0);
-                }
-
-                results_listView.setAdapter(null);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("choice", selectedThing);
+                setResult(RESULT_OK, resultIntent);
+                finish();
 
             }
         });
+
+        if (intent.getExtras().getInt("requestCode") == 0)
+            origin_editText.requestFocus();
+        else
+            destination_editText.requestFocus();
+
     }
 
     @Override
@@ -122,19 +110,24 @@ public class TraceRouteActivity extends SpeechActivity {
 
         if (origin_editText.hasFocus() || destination_editText.hasFocus()) {
 
-            // cancel
-            if (false) {
+            if (matches.contains(getResources().getString(R.string.cancelCommand).replace("; ", ""))) {
 
                 origin_editText.setFocusable(false);
                 destination_editText.setFocusable(false);
                 results_listView.setAdapter(null);
 
-            } else {
+                String speech = getResources().getString(R.string.traceRouteActivity);
+                speech += getResources().getString(R.string.afterSignalOptionsInformation);
+                speech += getResources().getString(R.string.selectOriginCommand);
+                speech += getResources().getString(R.string.selectDestinationCommand);
+                speech += getResources().getString(R.string.preferencesCommand);
+                speech += getResources().getString(R.string.returnCommand);
 
+                speechAndWaitCommand(speech);
+            } else {
                 //setText
                 EditText editTextInFocus = (origin_editText.hasFocus() ? origin_editText : destination_editText);
-                editTextInFocus.setText("");
-
+                editTextInFocus.setText(matches.get(0));
             }
 
         } else {
@@ -142,18 +135,17 @@ public class TraceRouteActivity extends SpeechActivity {
             String speech = getResources().getString(R.string.afterSignalInformation);
 
             // select origin
-            if (false) {
-                origin_editText.performClick();
-                speech += (R.string.originNameCommand);
+            if (matches.contains(getResources().getString(R.string.selectOriginCommand).replace("; ", ""))) {
+                origin_editText.requestFocus();
+                speech += getResources().getString(R.string.originNameCommand);
 
-            } else if (false) {
+            } else if (matches.contains(getResources().getString(R.string.selectDestinationCommand).replace("; ", ""))) {
                 // select destination
-                destination_editText.performClick();
-                speech += (R.string.destinationNameCommand);
+                destination_editText.requestFocus();
+                speech += getResources().getString(R.string.destinationNameCommand);
             }
 
-            speech += (R.string.cancelCommand);
-
+            speech += getResources().getString(R.string.cancelCommand);
             speechAndWaitCommand(speech);
 
         }

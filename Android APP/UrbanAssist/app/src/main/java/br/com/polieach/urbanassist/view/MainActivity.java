@@ -64,18 +64,6 @@ public class MainActivity extends SpeechActivity {
         }
     }
 
-    private void askPermissions() {
-        ActivityCompat.requestPermissions(MainActivity.this,
-                new String[]{Manifest.permission.ACCESS_WIFI_STATE,
-                        Manifest.permission.CHANGE_WIFI_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.INTERNET,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.RECORD_AUDIO},
-                1);
-    }
-
     @Override
     protected void initializeComponents() {
 
@@ -127,7 +115,6 @@ public class MainActivity extends SpeechActivity {
             }
         });
 
-        askPermissions();
     }
 
     @Override
